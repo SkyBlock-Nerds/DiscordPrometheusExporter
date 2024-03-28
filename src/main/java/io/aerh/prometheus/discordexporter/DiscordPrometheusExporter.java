@@ -1,6 +1,6 @@
 package io.aerh.prometheus.discordexporter;
 
-public class Main {
+public class DiscordPrometheusExporter {
     public static void main(String[] args) {
         System.out.println("Hello world!");
     }
