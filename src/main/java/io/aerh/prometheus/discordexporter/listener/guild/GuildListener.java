@@ -12,19 +12,19 @@ public class GuildListener extends ListenerAdapter {
 
     @SubscribeEvent
     public void onGuildReady(GuildReadyEvent event) {
-        MetricRepository.getInstance().getMetric("discord_guild_count").set(event.getGuild().getMemberCount(), event.getGuild().getId(), event.getGuild().getName());
+        MetricRepository.getInstance().getMetric("discord_guild_member_count").set(event.getGuild().getMemberCount(), event.getGuild().getId(), event.getGuild().getName());
         System.out.println("Set guild count for guild " + event.getGuild().getName() + " to " + event.getGuild().getMemberCount() + " members");
     }
 
     @SubscribeEvent
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        MetricRepository.getInstance().getMetric("discord_guild_count").increment(1, event.getGuild().getId(), event.getGuild().getName());
+        MetricRepository.getInstance().getMetric("discord_guild_member_count").increment(1, event.getGuild().getId(), event.getGuild().getName());
         System.out.println("Incremented guild count for guild " + event.getGuild().getName());
     }
 
     @SubscribeEvent
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        MetricRepository.getInstance().getMetric("discord_guild_count").decrement(1, event.getGuild().getId(), event.getGuild().getName());
+        MetricRepository.getInstance().getMetric("discord_guild_member_count").decrement(1, event.getGuild().getId(), event.getGuild().getName());
         System.out.println("Decremented guild count for guild " + event.getGuild().getName());
     }
 }
