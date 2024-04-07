@@ -1,7 +1,7 @@
 package io.aerh.prometheus.discordexporter.metric.impl.guild;
 
 import io.aerh.prometheus.discordexporter.metric.Metric;
-import io.prometheus.client.Gauge;
+import io.prometheus.metrics.core.metrics.Gauge;
 
 public class GuildMemberCountMetric extends Metric {
     private static final String NAME = "discord_guild_member_count";
@@ -17,25 +17,25 @@ public class GuildMemberCountMetric extends Metric {
 
     @Override
     protected void initialize() {
-        gauge = Gauge.build()
+        gauge = Gauge.builder()
                 .name(name)
                 .help(help)
                 .labelNames(labels)
-                .register(getRegistry());
+                .register();
     }
 
     @Override
     public void set(double value, String... labelValues) {
-        gauge.labels(labelValues).set(value);
+        gauge.labelValues(labelValues).set(value);
     }
 
     @Override
     public void increment(double value, String... labelValues) {
-        gauge.labels(labelValues).inc(value);
+        gauge.labelValues(labelValues).inc(value);
     }
 
     @Override
     public void decrement(double value, String... labelValues) {
-        gauge.labels(labelValues).dec(value);
+        gauge.labelValues(labelValues).dec(value);
     }
 }

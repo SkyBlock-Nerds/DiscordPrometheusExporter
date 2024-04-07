@@ -1,7 +1,5 @@
 package io.aerh.prometheus.discordexporter.metric;
 
-import io.prometheus.client.CollectorRegistry;
-
 public abstract class Metric {
     protected final String name;
     protected final String description;
@@ -38,9 +36,5 @@ public abstract class Metric {
 
     public String[] getLabels() {
         return labels;
-    }
-
-    public CollectorRegistry getRegistry() {
-        return CollectorRegistry.defaultRegistry;
     }
 }
