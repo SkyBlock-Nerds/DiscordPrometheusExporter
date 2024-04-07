@@ -5,6 +5,7 @@ import io.aerh.prometheus.discordexporter.listener.jda.JDAListener;
 import io.aerh.prometheus.discordexporter.metric.MetricRepository;
 import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildMemberCountMetric;
 import io.aerh.prometheus.discordexporter.metric.impl.jda.JDAEventCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.jda.JDAGatewayPingMetric;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
 import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
@@ -25,6 +26,7 @@ public class DiscordPrometheusExporter {
         Dotenv dotenv = Dotenv.load();
 
         JvmMetrics.builder().register();
+        MetricRepository.getInstance().addMetric(new JDAGatewayPingMetric());
         MetricRepository.getInstance().addMetric(new JDAEventCountMetric());
         MetricRepository.getInstance().addMetric(new GuildMemberCountMetric());
 
