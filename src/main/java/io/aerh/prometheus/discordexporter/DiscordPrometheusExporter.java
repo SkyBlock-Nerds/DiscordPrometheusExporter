@@ -3,7 +3,13 @@ package io.aerh.prometheus.discordexporter;
 import io.aerh.prometheus.discordexporter.listener.guild.GuildListener;
 import io.aerh.prometheus.discordexporter.listener.jda.JDAListener;
 import io.aerh.prometheus.discordexporter.metric.MetricRepository;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildBanCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildBoostStatusMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildExplicitContentLevelMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildMaxMemberCountMetric;
 import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildMemberCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildMemberStatusCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildVerificationLevelMetric;
 import io.aerh.prometheus.discordexporter.metric.impl.jda.JDAEventCountMetric;
 import io.aerh.prometheus.discordexporter.metric.impl.jda.JDAGatewayPingMetric;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -12,8 +18,11 @@ import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 
 public class DiscordPrometheusExporter {
@@ -29,11 +38,19 @@ public class DiscordPrometheusExporter {
         MetricRepository.getInstance().addMetric(new JDAGatewayPingMetric());
         MetricRepository.getInstance().addMetric(new JDAEventCountMetric());
         MetricRepository.getInstance().addMetric(new GuildMemberCountMetric());
+        MetricRepository.getInstance().addMetric(new GuildMemberStatusCountMetric());
+        MetricRepository.getInstance().addMetric(new GuildMaxMemberCountMetric());
+        MetricRepository.getInstance().addMetric(new GuildBanCountMetric());
+        MetricRepository.getInstance().addMetric(new GuildBoostStatusMetric());
+        MetricRepository.getInstance().addMetric(new GuildVerificationLevelMetric());
+        MetricRepository.getInstance().addMetric(new GuildExplicitContentLevelMetric());
 
         try (HTTPServer server = HTTPServer.builder().port(Integer.parseInt(dotenv.get("PROMETHEUS_PORT", "8080"))).buildAndStart()) {
             System.out.println("HTTP Server listening on port " + server.getPort());
 
             JDA jda = JDABuilder.createDefault(dotenv.get("DISCORD_BOT_TOKEN"))
+                    .setEnabledIntents(Arrays.stream(GatewayIntent.values()).toList())
+                    .enableCache(CacheFlag.ONLINE_STATUS)
                     .setEventManager(new AnnotatedEventManager())
                     .addEventListeners(new JDAListener())
                     .addEventListeners(new GuildListener())
