@@ -1,4 +1,4 @@
-package io.aerh.prometheus.discordexporter.metric.impl.guild;
+package io.aerh.prometheus.discordexporter.metric.impl.guild.moderation;
 
 import io.aerh.prometheus.discordexporter.metric.Metric;
 import io.prometheus.metrics.core.metrics.Gauge;

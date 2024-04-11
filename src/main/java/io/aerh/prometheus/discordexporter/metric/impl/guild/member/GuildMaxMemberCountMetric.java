@@ -1,20 +1,20 @@
-package io.aerh.prometheus.discordexporter.metric.impl.guild;
+package io.aerh.prometheus.discordexporter.metric.impl.guild.member;
 
 import io.aerh.prometheus.discordexporter.metric.Metric;
 import io.prometheus.metrics.core.metrics.Gauge;
 
-public class GuildVerificationLevelMetric extends Metric {
-    private static final String NAME = "discord_guild_verification_level";
-    private static final String DESCRIPTION = "The verification level of a Discord guild";
-    private static final String HELP = "The verification level of a Discord guild";
+public class GuildMaxMemberCountMetric extends Metric {
+    private static final String NAME = "discord_guild_max_member_count";
+    private static final String DESCRIPTION = "The maximum number of members in a Discord guild";
+    private static final String HELP = "The maximum number of members in a Discord guild";
     private static final String[] LABELS = {"guild_id", "guild_name"};
-
+    
     private Gauge gauge;
 
-    public GuildVerificationLevelMetric() {
+    public GuildMaxMemberCountMetric() {
         super(NAME, DESCRIPTION, HELP, LABELS);
     }
-
+    
     @Override
     protected void initialize() {
         gauge = Gauge.builder()

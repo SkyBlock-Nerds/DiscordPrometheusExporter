@@ -3,13 +3,15 @@ package io.aerh.prometheus.discordexporter;
 import io.aerh.prometheus.discordexporter.listener.guild.GuildListener;
 import io.aerh.prometheus.discordexporter.listener.jda.JDAListener;
 import io.aerh.prometheus.discordexporter.metric.MetricRepository;
-import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildBanCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.invite.GuildInviteCreateMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.invite.GuildInviteDeleteMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.moderation.GuildBanCountMetric;
 import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildBoostStatusMetric;
-import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildExplicitContentLevelMetric;
-import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildMaxMemberCountMetric;
-import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildMemberCountMetric;
-import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildMemberStatusCountMetric;
-import io.aerh.prometheus.discordexporter.metric.impl.guild.GuildVerificationLevelMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.moderation.GuildExplicitContentLevelMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.member.GuildMaxMemberCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.member.GuildMemberCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.member.GuildMemberStatusCountMetric;
+import io.aerh.prometheus.discordexporter.metric.impl.guild.moderation.GuildVerificationLevelMetric;
 import io.aerh.prometheus.discordexporter.metric.impl.jda.JDAEventCountMetric;
 import io.aerh.prometheus.discordexporter.metric.impl.jda.JDAGatewayPingMetric;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -45,6 +47,8 @@ public class DiscordPrometheusExporter {
         MetricRepository.getInstance().addMetric(new GuildBoostStatusMetric());
         MetricRepository.getInstance().addMetric(new GuildVerificationLevelMetric());
         MetricRepository.getInstance().addMetric(new GuildExplicitContentLevelMetric());
+        MetricRepository.getInstance().addMetric(new GuildInviteCreateMetric());
+        MetricRepository.getInstance().addMetric(new GuildInviteDeleteMetric());
 
         try (HTTPServer server = HTTPServer.builder().port(Integer.parseInt(dotenv.get("PROMETHEUS_PORT", "8080"))).buildAndStart()) {
             System.out.println("HTTP Server listening on port " + server.getPort());

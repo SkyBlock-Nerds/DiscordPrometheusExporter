@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
+import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
+import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
@@ -111,12 +113,41 @@ public class GuildListener extends ListenerAdapter {
     }
 
     @SubscribeEvent
-    public void onGuildVerificationLevelUpdate(GuildUpdateVerificationLevelEvent event) {
+    public void onGuildUpdateVerificationLevel(GuildUpdateVerificationLevelEvent event) {
         MetricRepository.getInstance().getMetric("discord_guild_verification_level").set(event.getNewValue().getKey(), event.getGuild().getId(), event.getGuild().getName());
     }
 
     @SubscribeEvent
-    public void onExplicitContentLevelUpdate(GuildUpdateExplicitContentLevelEvent event) {
+    public void onGuildUpdateExplicitContentLevel(GuildUpdateExplicitContentLevelEvent event) {
         MetricRepository.getInstance().getMetric("discord_guild_explicit_content_level").set(event.getNewValue().getKey(), event.getGuild().getId(), event.getGuild().getName());
+    }
+
+    @SubscribeEvent
+    public void onGuildInviteCreate(GuildInviteCreateEvent event) {
+        String guildId = event.getGuild().getId();
+        String guildName = event.getGuild().getName();
+        String channelId = event.getInvite().getChannel() == null ? "null" : event.getInvite().getChannel().getId();
+        String channelName = event.getInvite().getChannel() == null ? "null" : event.getInvite().getChannel().getName();
+        String inviteCode = event.getInvite().getCode();
+        String inviterId = event.getInvite().getInviter() == null ? "null" : event.getInvite().getInviter().getId();
+        String inviterName = event.getInvite().getInviter() == null ? "null" : event.getInvite().getInviter().getName();
+        String maxAge = String.valueOf(event.getInvite().getMaxAge());
+        String maxUses = String.valueOf(event.getInvite().getMaxUses());
+        String isTemporary = String.valueOf(event.getInvite().isTemporary());
+
+        MetricRepository.getInstance().getMetric("discord_guild_invites_created").increment(1, guildId, guildName, channelId, channelName, inviteCode, inviterId, inviterName, maxAge, maxUses, isTemporary);
+        System.out.println("Incremented invite creation count for guild " + guildName + " by 1");
+    }
+
+    @SubscribeEvent
+    public void onGuildInviteDelete(GuildInviteDeleteEvent event) {
+        String guildId = event.getGuild().getId();
+        String guildName = event.getGuild().getName();
+        String channelId = event.getChannel().getId();
+        String channelName = event.getChannel().getName();
+        String inviteCode = event.getCode();
+
+        MetricRepository.getInstance().getMetric("discord_guild_invites_deleted").increment(1, guildId, guildName, channelId, channelName, inviteCode);
+        System.out.println("Incremented invite deletion count for guild " + guildName + " by 1");
     }
 }
