@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class DiscordPrometheusExporter {
             JDA jda = JDABuilder.createDefault(dotenv.get("DISCORD_BOT_TOKEN"))
                     .setEnabledIntents(Arrays.stream(GatewayIntent.values()).toList())
                     .enableCache(CacheFlag.ONLINE_STATUS)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .setEventManager(new AnnotatedEventManager())
                     .addEventListeners(new JDAListener())
                     .addEventListeners(new GuildListener())

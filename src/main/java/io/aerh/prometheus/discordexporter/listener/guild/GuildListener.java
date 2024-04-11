@@ -82,6 +82,8 @@ public class GuildListener extends ListenerAdapter {
                 event.getGuild().getName(),
                 event.getNewOnlineStatus().getKey()
         );
+
+        System.out.println("Set status count for " + event.getNewOnlineStatus().getKey() + " to " + event.getGuild().getMembers().stream().filter(member -> member.getOnlineStatus() == event.getNewOnlineStatus()).count() + " members");
     }
 
     @SubscribeEvent
