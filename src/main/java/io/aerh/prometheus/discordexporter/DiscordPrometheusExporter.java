@@ -41,6 +41,7 @@ public class DiscordPrometheusExporter {
         JvmMetrics.builder().register();
         MetricRepository.getInstance().addMetric(new JDAGatewayPingMetric());
         MetricRepository.getInstance().addMetric(new JDAEventCountMetric());
+        MetricRepository.getInstance().addMetric(new JDAExceptionMetric());
         MetricRepository.getInstance().addMetric(new GuildMemberCountMetric());
         MetricRepository.getInstance().addMetric(new GuildMemberStatusCountMetric());
         MetricRepository.getInstance().addMetric(new GuildMaxMemberCountMetric());
@@ -50,7 +51,6 @@ public class DiscordPrometheusExporter {
         MetricRepository.getInstance().addMetric(new GuildExplicitContentLevelMetric());
         MetricRepository.getInstance().addMetric(new GuildInviteCreateMetric());
         MetricRepository.getInstance().addMetric(new GuildInviteDeleteMetric());
-        MetricRepository.getInstance().addMetric(new JDAExceptionMetric());
 
         try (HTTPServer server = HTTPServer.builder().port(Integer.parseInt(dotenv.get("PROMETHEUS_PORT", "8080"))).buildAndStart()) {
             System.out.println("HTTP Server listening on port " + server.getPort());
